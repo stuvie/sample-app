@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Spring Boot: User Microservice</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+</head>
+
+<body>
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-1">
+			<h2>Spring Boot: User Microservice</h2>
+			<p>message: <span th:text="${message}"></span></p>
+			
+			<div class="col-md-6">
+				<table class="table table-striped">
+			    	<tr><th>id</th><th>First</th><th>Last</th><th>Email</th><th>Secret</th></tr>
+			    	<tr th:each="item : ${users}">
+			    		<td th:text="${item.id}"></td>
+			    		<td th:text="${item.firstName}"></td>
+			    		<td th:text="${item.lastName}"></td>
+			    		<td th:text="${item.email}"></td>
+			    		<td th:text="${item.secret}"></td>
+			    	</tr>
+			    </table>
+			</div>
+			<div class="row"></div>
+		    
+		    <h3>links</h3>
+		    <ul id="links">
+				<li><a href="/api/v1/users">users API - list</a></li>
+				<li><a href="/api/v1/users/2">users API - get by id</a></li>
+				<li><a href="/api/v1/users?email=sk@fywss.com">users API - get by email</a></li>
+				<li><a href="swagger-ui.html">swagger-ui</a></li>
+				<li><a href="actuatorlinks">actuator links</a></li>
+		    </ul>
+		    
+    	</div>
+	</div>
+</body>
+</html>
