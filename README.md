@@ -33,3 +33,5 @@ java -jar target/user-service-0.0.1-SNAPSHOT.jar
 Point your browser at ``http://localhost:8081/`` to interact with the application.
 
 Make sure to visit the spring boot actuator links at ``http://localhost:8081/actuatorlinks`` and the swagger API testing harness at ``http://localhost:8081/swagger-ui.html``
+
+If you use Postman, another way to test the APIs is to import the ``user-service.postman_collection.json`` file and run the test requests.
