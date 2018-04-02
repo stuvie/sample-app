@@ -8,11 +8,11 @@ It uses the most recent version of spring boot, version 2.0.0
 
 ### build and test
 
-To build the application and run the unit tests, execute:
+To build the application and run the unit & integration tests, execute:
 ```
-./mvnw clean install spring-boot:run
+./mvnw clean install
 ```
-After importing the project in your IDE, you should run the integration tests by opening the ``src/integrationtest/java/com/fywss/spring/userservice/domain/user/UserControllerIntegrationTest.java`` file.
+After importing the project in your IDE, you can run the integration tests by opening the ``src/integrationtest/java/com/fywss/spring/userservice/domain/user/UserControllerIntegrationTest.java`` file.
 
 ### run
 
