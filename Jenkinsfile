@@ -14,7 +14,7 @@ node {
 	}
   stage('Integration Tests') {
     dir('user-service') {
-      sh './mvnw verify'
+      sh './mvnw org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=false'
     }
 	}
   stage('Sonar Analysis') {
