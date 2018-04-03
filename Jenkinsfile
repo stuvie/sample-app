@@ -14,7 +14,7 @@ node {
 	}
   stage('Integration Test') {
     dir('user-service') {
-      sh './mvnw test'
+      sh './mvnw verify'
     }
 	}
 }
