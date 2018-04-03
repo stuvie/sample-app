@@ -11,6 +11,15 @@ body {
   line-height: 1.5;
 }
 
+.s1 {
+  border: 1px solid #eee;
+  background-color: tomato;
+}
+
+a {
+  margin: 5px;
+}
+
 button:disabled {
   opacity: 0.5;
 }
