@@ -98,36 +98,12 @@
 			<artifactId>spring-boot-maven-plugin</artifactId>
 		</plugin>
 		<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>build-helper-maven-plugin</artifactId>
-			<executions>
-				<execution>
-					<id>add-test-source</id>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>add-test-source</goal>
-					</goals>
-					<configuration>
-						<sources>
-							<source>src/integrationtest/java</source>
-						</sources>
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
-		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-failsafe-plugin</artifactId>
 			<executions>
 				<execution>
-					<id>integration-test</id>
 					<goals>
 						<goal>integration-test</goal>
-					</goals>
-				</execution>
-				<execution>
-					<id>verify</id>
-					<goals>
 						<goal>verify</goal>
 					</goals>
 				</execution>

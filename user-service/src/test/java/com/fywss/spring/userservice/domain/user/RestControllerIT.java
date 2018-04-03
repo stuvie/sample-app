@@ -25,7 +25,7 @@ import com.fywss.spring.userservice.UserServiceApplication;
 @ContextConfiguration(classes = { UserServiceApplication.class })
 @WebAppConfiguration
 @SpringBootTest
-public class UserControllerIntegrationTest {
+public class RestControllerIT {
 	
 	private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
