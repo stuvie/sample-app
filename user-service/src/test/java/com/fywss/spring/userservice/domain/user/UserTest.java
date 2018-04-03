@@ -12,7 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class UserValidationTest {
+public class UserTest {
 
 	private static ValidatorFactory validatorFactory;
 	private static Validator validator;
@@ -39,7 +39,7 @@ public class UserValidationTest {
 	public void createUserShouldDetectInvalidFirstName() {
 		User u = new User("s", "kay", "sk@fywss.com", "Good4password");
 		Set<ConstraintViolation<User>> violations = validator.validate(u);
-		assertEquals(violations.size(), 1);
+		assertEquals(1, violations.size());
 
 		ConstraintViolation<User> violation = violations.iterator().next();
 		assertEquals("firstName must be between 2 and 25 characters long", violation.getMessage());
@@ -51,7 +51,7 @@ public class UserValidationTest {
 	public void createUserShouldDetectInvalidEmail() {
 		User u = new User("stan", "kay", "bad", "Good4password");
 		Set<ConstraintViolation<User>> violations = validator.validate(u);
-		assertEquals(violations.size(), 1);
+		assertEquals(1, violations.size());
 
 		ConstraintViolation<User> violation = violations.iterator().next();
 		assertEquals("Email should be valid", violation.getMessage());
@@ -63,7 +63,7 @@ public class UserValidationTest {
 	public void createUserShouldDetectInvalidPassword() {
 		User u = new User("stu", "kay", "sk@fywss.com", "notverygood");
 		Set<ConstraintViolation<User>> violations = validator.validate(u);
-		assertEquals(violations.size(), 1);
+		assertEquals(1, violations.size());
 
 		ConstraintViolation<User> violation = violations.iterator().next();
 		assertEquals("Password must have one number, one lowercase and one uppercase character.", violation.getMessage());
@@ -75,6 +75,6 @@ public class UserValidationTest {
 	public void createUserShouldDetectMultipleProblems() {
 		User u = new User("s", "kay", "oops", "short");
 		Set<ConstraintViolation<User>> violations = validator.validate(u);
-		assertEquals(violations.size(), 4);
+		assertEquals(4, violations.size());
 	}
 }

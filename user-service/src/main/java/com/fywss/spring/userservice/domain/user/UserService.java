@@ -25,7 +25,7 @@ public class UserService {
 	
 	public List<User> findAll() {
 		List<User> users = repository.findAll();
-		logger.info("UserService:list: " + users);
+		logger.info("UserService:list: {}", users);
 		return users;
 	}
 	
@@ -44,7 +44,7 @@ public class UserService {
     	}
 		obj.setSecret(encryptPassword(obj.getSecret()));
     	User created = repository.save(obj);
-    	logger.info("created user: " + created);
+    	logger.info("created user: {}", created);
     	return created;
     }
 	
@@ -78,9 +78,7 @@ public class UserService {
     
     private boolean emailExists(String email) {
     	Optional<User> user = repository.getByEmail(email);
-        if (user.isPresent())
-        	return true;
-        return false;
+        return user.isPresent();
     }
     
 	private String encryptPassword(String password) {
@@ -92,14 +90,14 @@ public class UserService {
 			algorithm = password;
 		}
 
-		Mac sha256_HMAC;
+		Mac macHashAlgorithm;
 		try {
-			sha256_HMAC = Mac.getInstance(algorithm);
-			SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), algorithm);
-			sha256_HMAC.init(secret_key);
+			macHashAlgorithm = Mac.getInstance(algorithm);
+			SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), algorithm);
+			macHashAlgorithm.init(secretKey);
 
-			String hash = Base64.encodeBase64String(sha256_HMAC.doFinal(password.getBytes()));
-			logger.info("UserService:encryptPassword: " + hash);
+			String hash = Base64.encodeBase64String(macHashAlgorithm.doFinal(password.getBytes()));
+			logger.info("UserService:encryptPassword: {}", hash);
 			return hash;
 		} catch (NoSuchAlgorithmException e) {
 			String message = "NoSuchAlgorithmException " + e;

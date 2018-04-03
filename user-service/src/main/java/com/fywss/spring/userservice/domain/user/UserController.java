@@ -28,7 +28,7 @@ public class UserController {
 	@GetMapping
 	@ApiOperation (value = "Get all Users", notes = "Returns a List of User records", response = User.class, responseContainer = "List")
 	public List<User> findAll() {
-		return (List<User>) service.findAll();
+		return service.findAll();
 	}
 	
 	@GetMapping(value = "/{id}")
