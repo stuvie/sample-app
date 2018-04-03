@@ -7,14 +7,19 @@ node {
       sh './mvnw clean compile'
     }
 	}
-	stage('Unit Test') {
+	stage('Unit Tests') {
     dir('user-service') {
       sh './mvnw test'
     }
 	}
-  stage('Integration Test') {
+  stage('Integration Tests') {
     dir('user-service') {
       sh './mvnw verify'
+    }
+	}
+  stage('Sonar Analysis') {
+    dir('user-service') {
+      sh './mvnw sonar:sonar'
     }
 	}
 }
