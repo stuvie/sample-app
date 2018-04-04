@@ -17,7 +17,7 @@ node {
       sh './mvnw org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=false'
     }
 	}
-  stage('Sonar Analysis') {
+  stage('Code Metrics') {
     dir('user-service') {
       sh './mvnw sonar:sonar'
     }
