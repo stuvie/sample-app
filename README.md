@@ -1,10 +1,18 @@
 # sample-app
 
+## react-user
+
+In the ``react-user`` folder you will find a React.js application implementing a sample front-end.
+
+This project was initialized by cloning ``https://github.com/notrab/create-react-app-redux.git``
+
 ## user-service
 
-In the user-service folder you will find a spring boot application implementing a sample microservice for user objects.
+In the ``user-service`` folder you will find a spring boot application implementing a sample microservice for user objects.
 
 It uses the most recent version of spring boot, version 2.0.0
+
+This project was initialized by running ``./bin/springboot user-service``
 
 ### build and test
 
