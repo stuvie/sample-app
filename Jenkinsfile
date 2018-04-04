@@ -19,7 +19,7 @@ node {
 	}
   stage('Code Metrics') {
     dir('user-service') {
-      sh './mvnw sonar:sonar'
+      sh './mvnw checkstyle:checkstyle pmd:pmd sonar:sonar'
     }
 	}
 }
