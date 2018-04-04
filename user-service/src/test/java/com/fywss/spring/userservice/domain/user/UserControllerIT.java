@@ -1,5 +1,6 @@
 package com.fywss.spring.userservice.domain.user;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,13 +41,47 @@ public class UserControllerIT {
 	}
 
 	@Test
-	public void testGetUserResponse() throws Exception {
+	public void testFindAllResponse() throws Exception {
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users"))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(Matchers.greaterThanOrEqualTo(2))))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("Steve"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("Ziggy"))
+				.andReturn();
+
+		Assert.assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType());
+	}
+
+	@Test
+	public void testFindByIdResponse() throws Exception {
 		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/2"))
 				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Ziggy"))
 				.andReturn();
 
 		Assert.assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType());
+	}
+	
+	@Test
+	public void testFindByIdNotFoundError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/20"))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()));
+	}
+	
+	@Test
+	public void testFindByEmailResponse() throws Exception {
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users?email=sk@fywss.com"))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Steve"))
+				.andReturn();
+
+		Assert.assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType());
+	}
+	
+	@Test
+	public void testFindByEmailNotFoundError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users?email=rob@google.com"))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()));
 	}
 	
 	@Test
@@ -74,6 +109,57 @@ public class UserControllerIT {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users").contentType(CONTENT_TYPE)
 				.content(asJsonString(user)))
 				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+	}
+	
+	@Test
+	public void testUpdateUserResponse() throws Exception {
+		User user = new User("Ziggy", "Marley", "marley@gmail.com", "Good4password");
+		this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/2").contentType(CONTENT_TYPE)
+				.content(asJsonString(user)))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.email").value("marley@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Marley"));
+	}
+	
+	@Test
+	public void testUpdateUserNotFoundError() throws Exception {
+		User user = new User("Ziggy", "Marley", "marley@gmail.com", "Good4password");
+		this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/20").contentType(CONTENT_TYPE)
+				.content(asJsonString(user)))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()));
+	}
+	
+	@Test
+	public void testUpdateUserEncryptionExceptionResponse() throws Exception {
+		User user = new User("Ziggy", "Marley", "marley@gmail.com", "Abcdefgh44");
+		this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/2").contentType(CONTENT_TYPE)
+				.content(asJsonString(user)))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(Matchers.startsWith("EncryptionException")));
+	}
+	
+	@Test
+	public void testDeleteUserResponse() throws Exception {
+		User user = new User("bob", "manson", "bobby@gmail.com", "Good4password");
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users").contentType(CONTENT_TYPE)
+				.content(asJsonString(user)))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.email").value("bobby@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(Matchers.greaterThanOrEqualTo(3)));
+		
+		this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/3").contentType(CONTENT_TYPE)
+				.content(asJsonString(user)))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("bob"));
+	}
+	
+	@Test
+	public void testDeleteUserNotFoundError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/20"))
+				.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().is(HttpStatus.NOT_FOUND.value()));
 	}
 	
 	private String asJsonString(final Object obj) {

@@ -1,7 +1,5 @@
 package com.fywss.spring.userservice.domain.user;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import javax.crypto.Mac;
@@ -19,6 +17,7 @@ import com.fywss.spring.userservice.exception.UserNotFoundException;
 public class UserService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	private static final String ID_NOT_FOUND = "no user with id ";
 	
 	@Autowired
 	private UserRepository repository;
@@ -33,7 +32,7 @@ public class UserService {
 		Optional<User> user = repository.findById(id);
 
 		if (!user.isPresent()) {
-			throw new UserNotFoundException("no user with id " + id);
+			throw new UserNotFoundException(ID_NOT_FOUND + id);
 		}
 		return user;
 	}
@@ -52,18 +51,24 @@ public class UserService {
 		Optional<User> existing = findById(id);
 		
 		if (!existing.isPresent()) {
-			throw new UserNotFoundException("no user with id " + id);
+			throw new UserNotFoundException(ID_NOT_FOUND + id);
 		}
 		User user = existing.get();
 		user.setFirstName(obj.getFirstName());
 		user.setLastName(obj.getLastName());
 		user.setEmail(obj.getEmail());
-		// password is ignored on purpose
+		if (obj.getSecret() != null && obj.getSecret().length() > 1) {
+			user.setSecret(encryptPassword(obj.getSecret()));
+		}
+		logger.info("updated user: {}", user);
 		return repository.saveAndFlush(user);
 	}
 	
 	public Optional<User> delete(Long id) {
 		Optional<User> existing = repository.findById(id);
+		if (!existing.isPresent()) {
+			throw new UserNotFoundException(ID_NOT_FOUND + id);
+		}
 		repository.deleteById(id);
 		return existing;
 	}
@@ -99,12 +104,8 @@ public class UserService {
 			String hash = Base64.encodeBase64String(macHashAlgorithm.doFinal(password.getBytes()));
 			logger.info("UserService:encryptPassword: {}", hash);
 			return hash;
-		} catch (NoSuchAlgorithmException e) {
-			String message = "NoSuchAlgorithmException " + e;
-			logger.error(message);
-			throw new EncryptionException(message);
-		} catch (InvalidKeyException e) {
-			String message = "InvalidKeyException " + e;
+		} catch (Exception e) {
+			String message = "EncryptionException " + e;
 			logger.error(message);
 			throw new EncryptionException(message);
 		}

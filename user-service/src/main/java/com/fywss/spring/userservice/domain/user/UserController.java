@@ -49,13 +49,13 @@ public class UserController {
 		return service.create(obj);
 	}
 	
-	@PutMapping
+	@PutMapping (value = "/{id}")
 	@ApiOperation (value = "Update an existing User", notes = "Updates and returns the modified User record", response = User.class)
 	public User update(@Valid @RequestBody User obj, @PathVariable Long id) {
 		return service.update(obj, id);
 	}
 	
-	@DeleteMapping (value = "customers/{id}")
+	@DeleteMapping (value = "/{id}")
 	@ApiOperation (value = "Delete one User based on id", notes = "Returns the deleted User record", response = User.class)
 	public Optional<User> delete(@PathVariable Long id) {
 		return service.delete(id);
