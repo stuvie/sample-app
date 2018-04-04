@@ -2,7 +2,7 @@
 
 ## react-user
 
-In the ``react-user`` folder you will find a React.js application implementing a sample front-end.
+In the ``react-user`` folder you will find a React.js application implementing a simple front-end.
 
 This project was initialized by cloning ``https://github.com/notrab/create-react-app-redux.git``
 
